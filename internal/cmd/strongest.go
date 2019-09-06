@@ -47,21 +47,11 @@ var strongestCmd = &cobra.Command{
 			return errors.New("No beers found")
 		}
 
-		if number == 1 {
-			var strongest punkapi.Beer
-			for i, beer := range beers {
-				if i == 0 || strongest.Abv < beer.Abv {
-					strongest = beer
-				}
-			}
-
-			cmd.Printf("%s [%.2f]\n", strongest.Name, strongest.Abv)
-		} else {
-			sort.Sort(sort.Reverse(byAbv(beers)))
-			for _, beer := range beers[:number] {
-				cmd.Printf("%s [%.2f]\n", beer.Name, beer.Abv)
-			}
+		sort.Sort(sort.Reverse(byAbv(beers)))
+		for _, beer := range beers[:number] {
+			cmd.Printf("%s [%.2f]\n", beer.Name, beer.Abv)
 		}
+
 		return nil
 	},
 }

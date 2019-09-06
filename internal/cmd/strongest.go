@@ -38,7 +38,12 @@ var strongestCmd = &cobra.Command{
 			return err
 		}
 
-		beers, err := c.AllBeers()
+		var input *punkapi.AllBeersInput
+		if food, err := cmd.Flags().GetString("food"); err == nil {
+			input = &punkapi.AllBeersInput{Food: food}
+		}
+
+		beers, err := c.AllBeers(input)
 		if err != nil {
 			return err
 		}
@@ -68,6 +73,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	strongestCmd.Flags().Uint("n", 1, "Number of strong beers to return")
+	strongestCmd.Flags().String("food", "", "Return only beers matching a food pairing")
 }
 
 type byAbv []punkapi.Beer

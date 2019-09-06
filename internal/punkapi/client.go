@@ -40,7 +40,12 @@ func (c *Client) Beers(input BeersInput) ([]Beer, error) {
 	beersURL.Path = path.Join(beersURL.Path, "/beers")
 
 	q := beersURL.Query()
-	q.Add("page", fmt.Sprintf("%d", input.Page))
+	if input.Page > 0 {
+		q.Add("page", fmt.Sprintf("%d", input.Page))
+	}
+	if input.Food != "" {
+		q.Add("food", input.Food)
+	}
 	beersURL.RawQuery = q.Encode()
 
 	req, err := http.NewRequest(http.MethodGet, beersURL.String(), nil)
@@ -69,22 +74,27 @@ func (c *Client) Beers(input BeersInput) ([]Beer, error) {
 }
 
 // AllBeers fetches all pages of Client.Beers
-func (c *Client) AllBeers() ([]Beer, error) {
+func (c *Client) AllBeers(input *AllBeersInput) ([]Beer, error) {
 	var err error
 	var beers []Beer
-	var page uint = 1
+
+	i := BeersInput{
+		Page: 1,
+	}
+	if input != nil {
+		i.AllBeersInput = *input
+	}
+
 	for {
 		var b []Beer
-		b, err = c.Beers(BeersInput{
-			Page: page,
-		})
+		b, err = c.Beers(i)
 		if err != nil {
 			if err == ErrNoMorePages {
 				err = nil
 			}
 			break
 		}
-		page++
+		i.Page++
 		beers = append(beers, b...)
 	}
 
@@ -93,5 +103,11 @@ func (c *Client) AllBeers() ([]Beer, error) {
 
 // BeersInput are parameters for the request for beers
 type BeersInput struct {
+	AllBeersInput
 	Page uint
+}
+
+// AllBeersInput are parameters for fetching all beers
+type AllBeersInput struct {
+	Food string
 }

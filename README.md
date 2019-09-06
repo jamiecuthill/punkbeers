@@ -12,8 +12,8 @@ We'll build this as a CLI script using [https://github.com/spf13/cobra](Cobra).
 
 2. Return the strongest n beers where n is a user supplied parameter of your application.
 
-        $ punkbeers strongest -n 5
+        $ punkbeers strongest --n 5
 
 3. Return the strongest beer for a given food pairing, either do the matching yourself or use the food param of the beers api.
 
-        $ punkbeers strongest -food pork
+        $ punkbeers strongest --food pork

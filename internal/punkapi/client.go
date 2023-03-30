@@ -29,7 +29,7 @@ func NewClient(baseURL string) (*Client, error) {
 	return &Client{
 		url: u,
 		http: &http.Client{
-			Timeout: 1 * time.Second,
+			Timeout: 5 * time.Second,
 		},
 	}, nil
 }
